@@ -2,27 +2,22 @@ Instalar NÓ MONERO e rodar o serviço RPC para integração com PHP, Java, Pyth
 
 Linux, 64-bit
 
-Certifique-se de que a porta 18080 esteja aberta monerodusa esta porta para se comunicar com outros nós da rede Monero.
+Certifique-se de que a porta 18080 esteja aberta monerod utiliza esta porta para se comunicar com outros nós da rede Monero.
 
 
 Baixe os binários atuais do Monero Core
-cd /tmp
+ cd /tmp
  sudo wget https://downloads.getmonero.org/linux64
 
 Crie um diretório e extraia os arquivos em /opt. 
-mkdir /opt/monero
-sudo tar -xjvf linux64 -C /opt/monero/
+ mkdir /opt/monero
+ sudo tar -xjvf linux64 -C /opt/monero/
 
 Crie um link simbolico para iniciar o serviço.
  sudo ln -s /opt/monero/monero-x86_64-linux-gnu-v0.18.3.1/monerod /usr/bin/monerod
 
-cd /opt/monero/monero-x86_64-linux-gnu-v0.18.3.1/
-
-
 Crie um serviço para iniciar junto ao sistema.
-
-
-Comando rpc para monitorar transações e rodar o serviço 
+Comando rpc para monitorar transações e rodar o serviço.
 
 cd /
 ./monerod --detach
@@ -30,6 +25,7 @@ cd /
 
 
 Criar um script em /usr/local/sbin/monerod.sh para inicializar o serviço
+
 sudo vim /usr/local/sbin/monerod.sh
 
 #!/bin/bash
@@ -39,7 +35,7 @@ cd /opt/monero/monero-x86_64-linux-gnu-v0.18.3.1/
 ./monerod
 ./monero-wallet-rpc --rpc-bind-port 28083 --disable-rpc-login --wallet-dir /home/maibe/wallet
 
-Criar um serviço para inicializar
+Criar o serviço no systemd para inicializar junto ao sistema
 sudo vim /etc/systemd/system/monerod.service
 
 [Unit]
@@ -53,4 +49,5 @@ ExecReload=/bin/kill -HUP $MAINPID
 WantedBy=multi-user.target
 Alias=smartd.service
 
-Systemctl status monerod.service
+sudo systemctl status monerod.service
+sudo systemctl enable monerod.service
